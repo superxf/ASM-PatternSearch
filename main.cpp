@@ -49,6 +49,7 @@ int main(int argc, char *argv[]){
     std::ofstream ofs;
     vector<string> block;
     vector<string> pc;
+    vector<string> ins;
     ifs.open(argv[1],std::ios::in) ;
     if (!ifs.is_open()) {
         std::cout << "文件打开失败" << std::endl;
@@ -65,7 +66,7 @@ int main(int argc, char *argv[]){
         line_number++;
         if(codeline =="" || codeline[codeline.size() - 1] == ':') {
             if(block.size() >= 3){
-                Pattern_Search search(block, pc);
+                Pattern_Search search(block, pc, ins);
                 Search_Result res;
                 res = search.find_discontinuous_pattern();
                 tmp_res.push_back(res);
@@ -73,11 +74,13 @@ int main(int argc, char *argv[]){
             }
             pc.clear();
             block.clear();
+            ins.clear();
         }
         else{
             if(codeline.size()>20){
                 block.emplace_back(codeline.substr(20));
                 pc.emplace_back(codeline.substr(2,6));
+                ins.emplace_back(codeline.substr(10,8));
             }
             
         }
@@ -96,17 +99,17 @@ int main(int argc, char *argv[]){
     ofs.open("res.txt", std::ios::out);
     ofs<<"padd1"<<" "<< l_a_s1.size()<<endl;
     for(int i = 0; i < l_a_s1.size(); i++){
-        ofs<<l_a_s1[i].pc<<" " <<l_a_s1[i].s_code<<endl;
+        ofs<<l_a_s1[i].pc<<" " <<l_a_s1[i].bin<<" " <<l_a_s1[i].s_code<<endl;
     }
     ofs<<endl;
     ofs<<"padd2"<<" "<< l_a_s2.size()<<endl;
     for(int i = 0; i < l_a_s2.size(); i++){
-        ofs<<l_a_s2[i].pc<<" " <<l_a_s2[i].s_code<<endl;
+        ofs<<l_a_s2[i].pc<<" " <<l_a_s2[i].bin<<" " <<l_a_s2[i].s_code<<endl;
     }
     ofs<<endl;
     ofs<<"plats"<<" "<< l_a_t_s.size()<<endl;
     for(int i = 0; i < l_a_t_s.size(); i++){
-        ofs<<l_a_t_s[i].pc<<" " <<l_a_t_s[i].s_code<<endl;
+        ofs<<l_a_t_s[i].pc<<" " <<l_a_t_s[i].bin<<" " <<l_a_t_s[i].s_code<<endl;
     }
     ofs.close();
 }
