@@ -23,13 +23,13 @@ File_Process::File_Process(std::string asm_path, std::string output_path)
         }
 
 
-Pattern_Search::Pattern_Search(std::vector<std::string> &source,std::vector<std::string> &pc){
-        split_by_basicblock(source, pc);
+Pattern_Search::Pattern_Search(std::vector<std::string> &source,std::vector<std::string> &pc,std::vector<std::string> &ins){
+        split_by_basicblock(source, pc, ins);
         preprocess();
 }
 
 
-void Pattern_Search::split_by_basicblock(std::vector<std::string> &source,std::vector<std::string> &pc){
+void Pattern_Search::split_by_basicblock(std::vector<std::string> &source,std::vector<std::string> &pc,std::vector<std::string> &ins){
     std::string codeline;
     std::vector<std::string> code;
     for(int i = 0; i <source.size();i++)
@@ -56,6 +56,7 @@ void Pattern_Search::split_by_basicblock(std::vector<std::string> &source,std::v
             
             std::vector<std::string> block;
             std::vector<std::string> number;
+            std::vector<std::string> ins_b;
             for(int j =i+1;j<code.size();j++)
             {
                 len = code[j].size();
@@ -63,14 +64,17 @@ void Pattern_Search::split_by_basicblock(std::vector<std::string> &source,std::v
                 {
                     basic_block.push_back(block);
                     line_number.push_back(number);
+                    ins_block.push_back(ins_b);
                     i=j-1;
                     break;
                 }
                 else if(j==code.size()-1){
                     block.push_back(code[j]);
                     number.push_back(pc[j]);
+                    ins_b.push_back(ins[j]);
                     basic_block.push_back(block);
                     line_number.push_back(number);
+                    ins_block.push_back(ins_b);
                     i=j-1;
                     break;
                 }
@@ -79,6 +83,7 @@ void Pattern_Search::split_by_basicblock(std::vector<std::string> &source,std::v
                     {
                         block.push_back(code[j]);
                         number.push_back(pc[j]);
+                        ins_b.push_back(ins[j]);
                     }
                     
                 }
@@ -86,6 +91,7 @@ void Pattern_Search::split_by_basicblock(std::vector<std::string> &source,std::v
             }
             block.clear();
             number.clear();
+            ins_b.clear();
         }
     }
     // std::cout<<basic_block.size()<<std::endl;
@@ -127,6 +133,7 @@ void Pattern_Search::preprocess(){
                     ins.op = tmp.substr(pos, pos2 - pos);
                     ins.s_code =  basic_block[i][j];
                     ins.pc = line_number[i][j];
+                    ins.bin = ins_block[i][j];
                     // v.push_back(tmp.substr(pos, pos2 - pos));
                     // cout<<"bbb"<<endl;
                     pos = pos2 + 1;
