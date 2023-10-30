@@ -20,6 +20,7 @@ class Instruction{
     int pos;
     std::string pc;
     std::string s_code;
+    std::string bin;
     void clear(){
         operand.clear();
         op.clear();
@@ -49,9 +50,9 @@ class Search_Result{
 
 class Pattern_Search{
     public:
-    Pattern_Search(std::vector<std::string> &source,std::vector<std::string> &pc);
+    Pattern_Search(std::vector<std::string> &source,std::vector<std::string> &pc,std::vector<std::string> &ins);
     ~Pattern_Search() {}
-    void split_by_basicblock(std::vector<std::string> &source,std::vector<std::string> &pc);
+    void split_by_basicblock(std::vector<std::string> &source,std::vector<std::string> &pc,std::vector<std::string> &ins);
     void preprocess();  
     bool confict();
     Search_Result find_continuous_pattern();
@@ -69,6 +70,7 @@ class Pattern_Search{
     // std::vector<Pattern> _pattern;
     // std::vector<std::string> _source;
     std::vector<std::vector<std::string>> line_number;
+    std::vector<std::vector<std::string>> ins_block;
     std::vector<std::vector<Instruction>> split_code;
 };
 
