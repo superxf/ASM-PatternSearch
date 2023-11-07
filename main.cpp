@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
         }
     }
     if(block.size() >= 3){
-        Pattern_Search search(block, pc);
+        Pattern_Search search(block, pc, ins);
         Search_Result res;
         res = search.find_discontinuous_pattern();
         tmp_res.push_back(res);
