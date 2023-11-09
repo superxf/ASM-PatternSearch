@@ -270,6 +270,116 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
     }
     }
     
+    return res;
+
+}
+
+Search_Result Pattern_Search::find_continuous_pattern(){
+    Search_Result res;
+    int flag1=0;
+    int flag2=0;
+    int pos1, pos2;
+    std::vector<std::string> ii1,ii2,ii3;
+    for(auto &r_code : split_code){
+        for(int i = 0; i <r_code.size(); ++i){
+        flag1=0;
+        flag2=0;
+        if(r_code[i].op =="add"||r_code[i].op =="sub"||r_code[i].op =="or"||r_code[i].op =="and"||r_code[i].op =="xor")
+        {   
+                if(i-1>=0 && r_code[i-1].op=="ldr")
+                {
+                    if(is_relate(r_code[i], r_code[i-1]))
+                    {
+                        flag1 = 1;
+                        pos1 = i-1;
+                    }
+                    else
+                    {
+                        flag1 = 0;
+                    }
+                }
+                    
+                if(i+1<=r_code.size()-1&&r_code[i+1].op=="str")
+                {
+                     
+                    if(is_relate(r_code[i], r_code[i+1]))
+                    {
+                        flag2 = 1;
+                        pos2 = i+1;
+                    }
+                        
+                    else
+                    {
+                        flag2=0;
+                    }
+                }
+                
+            if(flag1==1&&flag2==1)
+            {
+                
+                bool flag3 = 1;
+                bool flag4 = 0;
+                std::string ch = r_code[pos1].operand[0];
+                for(int j = pos2+1; j <r_code.size(); j++){
+                    
+                    if(r_code[j].op[0] == 'b') break;
+                    for(int k = 0; k < r_code[j].operand.size(); k++){
+                        if(ch == r_code[j].operand[k]){
+                            
+                            if((r_code[j].op == "ldr"||r_code[j].op == "mov")&&ch == r_code[j].operand[0]){
+                                flag4 = 1;
+                                break;
+                            }
+                            else{
+                                flag3 = 0;
+                                flag4 = 1;
+                                break;
+                            }
+                        }
+                            
+                    }
+                    if(flag4)
+                        break;
+                    
+                }
+
+                bool flag5 = 1;
+                bool flag6 = 0;
+                std::string ch1 = r_code[pos2].operand[0];
+                for(int j = pos2+1; j <r_code.size(); j++){
+                    
+                    if(r_code[j].op[0] == 'b') break;
+                    for(int k = 0; k < r_code[j].operand.size(); k++){
+                        if(ch1 == r_code[j].operand[k]){
+                            
+                            if((r_code[j].op == "ldr"||r_code[j].op == "mov")&&ch1 == r_code[j].operand[0]){
+                                flag6 = 1;
+                                break;
+                            }
+                            else{
+                                flag5 = 0;
+                                flag6 = 1;
+                                break;
+                            }
+                        }
+                            
+                    }
+                    if(flag6)
+                        break;
+                    
+                }
+                if(flag3==1&&flag5==1){
+                    res.ins.push_back(r_code[pos1]);
+                    res.ins.push_back(r_code[i]);
+                    res.ins.push_back(r_code[pos2]);
+                }
+                
+            }
+            
+        }
+    }
+    }
+    
    
    
     return res;
