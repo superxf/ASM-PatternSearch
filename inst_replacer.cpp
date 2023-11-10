@@ -6,6 +6,33 @@ Pattern_Search::Pattern_Search(std::vector<std::string> &source,std::vector<std:
 }
 
 
+bool Pattern_Search::is_branch(std::string &s){
+    char n1 = s[0];
+    char n2 = s[1];
+    if(n1>='0'&&n1<='9'){
+        if((n1-'0') % 2 == 0){
+            return false;
+        }
+    }
+    else if(n1>='a'&&n1<='z'){
+        if((n1 - 'a') % 2 == 0){
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+    if(n2>='0'&&n2<='9'){
+        if((n2 - '0') <4 || (n2 - '0') >7)
+            return false;
+    }
+    else{
+        return false;
+    }
+    return true;
+
+}
+
 void Pattern_Search::split_by_basicblock(std::vector<std::string> &source,std::vector<std::string> &pc,std::vector<std::string> &ins){
     std::string codeline;
     std::vector<std::string> code;
@@ -23,9 +50,8 @@ void Pattern_Search::split_by_basicblock(std::vector<std::string> &source,std::v
     {
         int len = code[i].length();
         
-        if(code[i][len-1]==':'||code[i][0] == 'b'||i==0)
+        if(code[i][len-1]==':'||is_branch(ins[i])||i==0)
         {
-            
             std::vector<std::string> block;
             std::vector<std::string> number;
             std::vector<std::string> ins_b;
@@ -157,7 +183,7 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
         {   
             for(int j = i-1; j >= 0; --j)
             {
-                if(r_code[j].op[0]=='b'||r_code[j].op == "str"
+                if(is_branch(r_code[j].bin)||r_code[j].op == "str"
                     ||(is_relate(r_code[i], r_code[j])&&r_code[j].op != "ldr")){
                     flag1 = 0;
                     break;
@@ -181,7 +207,7 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
 
             for(int j = i+1; j <r_code.size(); ++j)
             {
-                if(r_code[j].op[0]=='b'||r_code[j].op == "ldr"
+                if(is_branch(r_code[j].bin)||r_code[j].op == "ldr"
                 ||(is_relate(r_code[i], r_code[j])&&r_code[j].op != "str")){
                     flag2 = 0;
                     break;
@@ -212,7 +238,7 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
                 std::string ch = r_code[pos1].operand[0];
                 for(int j = pos2+1; j <r_code.size(); j++){
                     
-                    if(r_code[j].op[0] == 'b') break;
+                    if(is_branch(r_code[j].bin)) break;
                     for(int k = 0; k < r_code[j].operand.size(); k++){
                         if(ch == r_code[j].operand[k]){
                             
