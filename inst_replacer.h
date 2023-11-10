@@ -44,6 +44,7 @@ class Pattern_Search{
     bool confict();
     Search_Result find_discontinuous_pattern();
     Search_Result find_continuous_pattern();
+    bool is_branch(std::string &s);
     bool is_relate(Instruction &i1, Instruction &i2);
     void getOperand(std::vector<std::string> &str, std::string reg);
     void operandCheck(std::vector<std::string> &str);
