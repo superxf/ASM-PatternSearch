@@ -17,9 +17,12 @@ void type_check(Instruction& i1, Instruction& i2, Instruction& i3){
                     l_a_s1.emplace_back(i3);
                 }
                 else{
-                    l_a_s2.emplace_back(i1);
-                    l_a_s2.emplace_back(i2);
-                    l_a_s2.emplace_back(i3);
+                    if(i1.operand.size()==2){
+                        l_a_s2.emplace_back(i1);
+                        l_a_s2.emplace_back(i2);
+                        l_a_s2.emplace_back(i3);
+                    }
+                    
                 }
             }
         }
