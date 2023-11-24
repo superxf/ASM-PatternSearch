@@ -8,7 +8,6 @@ vector<Instruction> l_a_t_s;
 int cnt = 0;
 void type_check(Instruction& i1, Instruction& i2, Instruction& i3){
     if(i1.operand[0] == i2.operand[1] || i1.operand[0] == i2.operand[2]){
-        
         if(i2.operand[0] == i3.operand[0]&& i1.operand.size()==i3.operand.size()&&i2.operand.size()==3){
             if(i1.operand.size()==2||(i1.operand.size()==3 && i1.operand[2] == i3.operand[2])){
                 if(i1.operand[1] == i3.operand[1]){
@@ -17,7 +16,7 @@ void type_check(Instruction& i1, Instruction& i2, Instruction& i3){
                     l_a_s1.emplace_back(i3);
                 }
                 else{
-                    if(i1.operand.size()==2){
+                    if(i1.operand.size()==2&&i2.operand[2][0]!='#'){
                         l_a_s2.emplace_back(i1);
                         l_a_s2.emplace_back(i2);
                         l_a_s2.emplace_back(i3);
