@@ -5,35 +5,62 @@ vector<vector<string>> f_pc;
 vector<Instruction> l_a_s1;
 vector<Instruction> l_a_s2;
 vector<Instruction> l_a_t_s;
+vector<Instruction> l_a_l;
+int size1 = 0;
+int size2 = 0;
+int size3 = 0;
+int size4 = 0;
 int cnt = 0;
 void type_check(Instruction& i1, Instruction& i2, Instruction& i3){
-    if(i1.operand[0] == i2.operand[1] || i1.operand[0] == i2.operand[2]){
-        if(i2.operand[0] == i3.operand[0]&& i1.operand.size()==i3.operand.size()&&i2.operand.size()==3){
-            if(i1.operand.size()==2||(i1.operand.size()==3 && i1.operand[2] == i3.operand[2])){
-                if(i1.operand[1] == i3.operand[1]){
-                    l_a_s1.emplace_back(i1);
-                    l_a_s1.emplace_back(i2);
-                    l_a_s1.emplace_back(i3);
-                }
-                else{
-                    if(i1.operand.size()==2&&i2.operand[2][0]!='#'){
-                        l_a_s2.emplace_back(i1);
-                        l_a_s2.emplace_back(i2);
-                        l_a_s2.emplace_back(i3);
+    if(i3.op =="str"){
+        if(i1.operand[0] == i2.operand[1] || i1.operand[0] == i2.operand[2]){
+            if(i2.operand[0] == i3.operand[0]&& i1.operand.size()==i3.operand.size()){     
+                    if(i1.operand[1] == i3.operand[1]){
+                        size1++;
+                        if(i1.operand.size()==2||(i1.operand.size()==3 && i1.operand[2] == i3.operand[2])){
+                            if(i2.operand.size()==3){
+                                l_a_s1.emplace_back(i1);
+                                l_a_s1.emplace_back(i2);
+                                l_a_s1.emplace_back(i3);
+                            }
+                        }
                     }
-                    
+                    else{
+                        size2++;
+                        if(i1.operand.size()==2&&i2.operand[2][0]!='#'&&i2.operand.size()==3){
+                            l_a_s2.emplace_back(i1);
+                            l_a_s2.emplace_back(i2);
+                            l_a_s2.emplace_back(i3);
+                        }
+                    }
+            }
+        }
+        if(i1.operand[0] == i2.operand[1] || i1.operand[0] == i2.operand[2]){
+            if(i2.operand[0] == i3.operand[1]){
+                size3++;
+                if(i1.operand.size()==i3.operand.size()&&i2.operand.size()==3&&i2.operand[2][0]!='#'&&i1.operand.size()==2){
+                        l_a_t_s.emplace_back(i1);
+                        l_a_t_s.emplace_back(i2);
+                        l_a_t_s.emplace_back(i3);
                 }
+                    
             }
         }
     }
-    if(i1.operand[0] == i2.operand[0] &&i2.operand.size()==3){
-        if(i2.operand[0] == i3.operand[1]&& i1.operand.size()==i3.operand.size()){
-                l_a_t_s.emplace_back(i1);
-                l_a_t_s.emplace_back(i2);
-                l_a_t_s.emplace_back(i3);
-        }
+    else{
+        if(i1.operand[0] == i2.operand[1] || i1.operand[0] == i2.operand[2]){
+            if(i2.operand[0] == i3.operand[1]){
+                size4++;
+                if(i1.operand.size()==i3.operand.size()&&i2.operand.size()==3&&i2.operand[2][0]!='#'&&i1.operand.size()==2){
+                    l_a_l.emplace_back(i1);
+                    l_a_l.emplace_back(i2);
+                    l_a_l.emplace_back(i3);
+                }
+            }
             
+        }
     }
+    
 }
 
 int main(int argc, char *argv[]){
@@ -98,10 +125,21 @@ int main(int argc, char *argv[]){
         }
     }
     ifs.close();
-    cout<<l_a_s1.size()<<endl;
-    cout<<l_a_s2.size()<<endl;
-    cout<<l_a_t_s.size()<<endl;
-
+    cout<<"padd1"<<endl;
+    cout<<"所有满足条件的个数: "<<size1 * 3<<endl;
+    cout<<"可替换的个数: "<<l_a_s1.size()<<endl;
+    cout<<endl;
+    cout<<"padd2"<<endl;
+    cout<<"所有满足条件的个数: "<<size2 * 3<<endl;
+    cout<<"可替换的个数: "<<l_a_s2.size()<<endl;
+    cout<<endl;
+    cout<<"plat"<<endl;
+    cout<<"所有满足条件的个数: "<<size3 * 3<<endl;
+    cout<<"可替换的个数: "<<l_a_t_s.size()<<endl;
+    cout<<endl;
+    cout<<"pll"<<endl;
+    cout<<"所有满足条件的个数: "<<size4 * 3<<endl;
+    cout<<"可替换的个数: "<<l_a_l.size()<<endl;
     ofs.open("res.txt", std::ios::out);
     ofs<<"padd1"<<" "<< l_a_s1.size()<<endl;
     for(int i = 0; i < l_a_s1.size(); i++){
@@ -116,6 +154,11 @@ int main(int argc, char *argv[]){
     ofs<<"plats"<<" "<< l_a_t_s.size()<<endl;
     for(int i = 0; i < l_a_t_s.size(); i++){
         ofs<<l_a_t_s[i].pc<<" " <<l_a_t_s[i].bin<<" " <<l_a_t_s[i].s_code<<endl;
+    }
+    ofs<<endl;
+    ofs<<"pll"<<" "<< l_a_l.size()<<endl;
+    for(int i = 0; i < l_a_l.size(); i++){
+        ofs<<l_a_l[i].pc<<" " <<l_a_l[i].bin<<" " <<l_a_l[i].s_code<<endl;
     }
     ofs.close();
 }

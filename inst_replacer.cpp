@@ -207,12 +207,12 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
 
             for(int j = i+1; j <r_code.size(); ++j)
             {
-                if(is_branch(r_code[j].bin)||r_code[j].op == "ldr"
-                ||(is_relate(r_code[i], r_code[j])&&r_code[j].op != "str")){
+                if(is_branch(r_code[j].bin)
+                ||(is_relate(r_code[i], r_code[j])&&(r_code[j].op != "str"&&r_code[j].op!="ldr"))){
                     flag2 = 0;
                     break;
                 }
-                if(r_code[j].op=="str")
+                if(r_code[j].op=="str"||r_code[j].op=="ldr")
                 {
                      
                     if(is_relate(r_code[i], r_code[j]))
