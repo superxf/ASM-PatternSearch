@@ -169,11 +169,12 @@ void Pattern_Search::preprocess(){
 
 }
 
-Search_Result Pattern_Search::find_discontinuous_pattern(){
-    Search_Result res;
+std::vector<Instruction> Pattern_Search::find_discontinuous_pattern(){
+    std::vector<Instruction> res;
     int flag1=0;
     int flag2=0;
     int pos1, pos2;
+    std::vector<std::string> write_ins = {"adc","adcs", "add", "adds","and", "ands", "eon", "eor", "sub","subs", "ldr", "mov"};
     std::vector<std::string> ii1,ii2,ii3;
     for(auto &r_code : split_code){
         for(int i = 0; i <r_code.size(); ++i){
@@ -235,6 +236,7 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
                 
                 bool flag3 = 1;
                 bool flag4 = 0;
+                bool flag_s1 = 0;
                 std::string ch = r_code[pos1].operand[0];
                 for(int j = pos2+1; j <r_code.size(); j++){
                     
@@ -242,9 +244,24 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
                     for(int k = 0; k < r_code[j].operand.size(); k++){
                         if(ch == r_code[j].operand[k]){
                             
-                            if((r_code[j].op == "ldr"||r_code[j].op == "mov")&&ch == r_code[j].operand[0]){
-                                flag4 = 1;
-                                break;
+                            // if((r_code[j].op == "ldr"||r_code[j].op == "mov")&&ch == r_code[j].operand[0]){
+                            if(find(write_ins.begin(), write_ins.end(),r_code[j].op) != write_ins.end()){
+                                bool flag_t = 1;
+                                for(int n = 1; n < r_code[j].operand.size(); n++){
+                                     if(ch == r_code[j].operand[n]){
+                                        flag_t = 0;
+                                     }
+                                }
+                                if(flag_t == 1){
+                                    flag_s1 = 1;
+                                    flag4 = 1;
+                                    break;
+                                }
+                                else{
+                                    flag3 = 0;
+                                    flag4 = 1;
+                                    break;
+                                }
                             }
                             else{
                                 flag3 = 0;
@@ -261,16 +278,30 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
 
                 bool flag5 = 1;
                 bool flag6 = 0;
-                std::string ch1 = r_code[pos2].operand[0];
+                bool flag_s2 = 0;
+                std::string ch1 = r_code[i].operand[0];
                 for(int j = pos2+1; j <r_code.size(); j++){
                     
                     if(r_code[j].op[0] == 'b') break;
                     for(int k = 0; k < r_code[j].operand.size(); k++){
                         if(ch1 == r_code[j].operand[k]){
-                            
-                            if((r_code[j].op == "ldr"||r_code[j].op == "mov")&&ch1 == r_code[j].operand[0]){
-                                flag6 = 1;
-                                break;
+                            if(find(write_ins.begin(), write_ins.end(),r_code[j].op) != write_ins.end()){
+                                bool flag_t = 1;
+                                for(int n = 1; n < r_code[j].operand.size(); n++){
+                                     if(ch1 == r_code[j].operand[n]){
+                                        flag_t = 0;
+                                     }
+                                }
+                                if(flag_t == 1){
+                                    flag_s2 = 1;
+                                    flag6 = 1;
+                                    break;
+                                }
+                                else{
+                                    flag5 = 0;
+                                    flag6 = 1;
+                                    break;
+                                }
                             }
                             else{
                                 flag5 = 0;
@@ -285,9 +316,14 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
                     
                 }
                 if(flag3==1&&flag5==1){
-                    res.ins.push_back(r_code[pos1]);
-                    res.ins.push_back(r_code[i]);
-                    res.ins.push_back(r_code[pos2]);
+                    // std::cout<<flag_s1<<std::endl;
+                    // std::cout<<flag_s2<<std::endl;
+                    if(flag_s1 == 1&& flag_s2 == 1){
+                        r_code[pos1].safe = 1;
+                    }
+                    res.push_back(r_code[pos1]);
+                    res.push_back(r_code[i]);
+                    res.push_back(r_code[pos2]);
                 }
                 
             }
@@ -300,8 +336,8 @@ Search_Result Pattern_Search::find_discontinuous_pattern(){
 
 }
 
-Search_Result Pattern_Search::find_continuous_pattern(){
-    Search_Result res;
+std::vector<Instruction> Pattern_Search::find_continuous_pattern(){
+    std::vector<Instruction> res;
     int flag1=0;
     int flag2=0;
     int pos1, pos2;
@@ -395,9 +431,9 @@ Search_Result Pattern_Search::find_continuous_pattern(){
                     
                 }
                 if(flag3==1&&flag5==1){
-                    res.ins.push_back(r_code[pos1]);
-                    res.ins.push_back(r_code[i]);
-                    res.ins.push_back(r_code[pos2]);
+                    res.push_back(r_code[pos1]);
+                    res.push_back(r_code[i]);
+                    res.push_back(r_code[pos2]);
                 }
                 
             }
