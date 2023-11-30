@@ -18,10 +18,10 @@ int cnt = 0;
 void type_check(Instruction& i1, Instruction& i2, Instruction& i3){
     if(i3.op =="str"){
         if(i1.operand[0] == i2.operand[1] || i1.operand[0] == i2.operand[2]){
-            if(i2.operand[0] == i3.operand[0]&& i1.operand.size()==i3.operand.size()){     
+            if(i2.operand[0] == i3.operand[0]){     
                     if(i1.operand[1] == i3.operand[1]){
                         size1++;
-                        if(i1.operand.size()==2||(i1.operand.size()==3 && i1.operand[2] == i3.operand[2])){
+                        if(i1.operand.size()==i3.operand.size()&& i1.operand.size()==2||(i1.operand.size()==3 && i1.operand[2] == i3.operand[2])){
                             if(i2.operand.size()==3){
                                 l_a_s1.emplace_back(i1);
                                 l_a_s1.emplace_back(i2);
@@ -33,7 +33,7 @@ void type_check(Instruction& i1, Instruction& i2, Instruction& i3){
                     }
                     else{
                         size2++;
-                        if(i1.operand.size()==2&&i2.operand[2][0]!='#'&&i2.operand.size()==3){
+                        if(i2.operand[2][0]!='#'&&i2.operand.size()==3&&i1.operand.size()<=3&&i3.operand.size()<=3&&i1.operand[0]!=i2.operand[0]){
                             l_a_s2.emplace_back(i1);
                             l_a_s2.emplace_back(i2);
                             l_a_s2.emplace_back(i3);
@@ -46,7 +46,7 @@ void type_check(Instruction& i1, Instruction& i2, Instruction& i3){
         if(i1.operand[0] == i2.operand[1] || i1.operand[0] == i2.operand[2]){
             if(i2.operand[0] == i3.operand[1]){
                 size3++;
-                if(i1.operand.size()==i3.operand.size()&&i2.operand.size()==3&&i2.operand[2][0]!='#'&&i1.operand.size()==2){
+                if(i2.operand.size()==3&&i2.operand[2][0]!='#'&&i1.operand.size()<=3&&i3.operand.size()<=3&&i1.operand[0]!=i2.operand[0]){
                         l_a_t_s.emplace_back(i1);
                         l_a_t_s.emplace_back(i2);
                         l_a_t_s.emplace_back(i3);
@@ -61,7 +61,7 @@ void type_check(Instruction& i1, Instruction& i2, Instruction& i3){
         if(i1.operand[0] == i2.operand[1] || i1.operand[0] == i2.operand[2]){
             if(i2.operand[0] == i3.operand[1]){
                 size4++;
-                if(i1.operand.size()==i3.operand.size()&&i2.operand.size()==3&&i2.operand[2][0]!='#'&&i1.operand.size()==2){
+                if(i2.operand.size()==3&&i2.operand[2][0]!='#'&&i1.operand.size()<=3&&i3.operand.size()<=3&&i1.operand[0]!=i3.operand[0]){
                     l_a_l.emplace_back(i1);
                     l_a_l.emplace_back(i2);
                     l_a_l.emplace_back(i3);
@@ -139,22 +139,22 @@ int main(int argc, char *argv[]){
     cout<<"padd1"<<endl;
     cout<<"所有满足条件的个数: "<<size1 * 3<<endl;
     cout<<"可替换的个数: "<<l_a_s1.size()<<endl;
-    cout<<"安全的个数: "<<size1_s<<endl;
+    cout<<"安全的个数: "<<size1_s * 3<<endl;
     cout<<endl;
     cout<<"padd2"<<endl;
     cout<<"所有满足条件的个数: "<<size2 * 3<<endl;
     cout<<"可替换的个数: "<<l_a_s2.size()<<endl;
-    cout<<"安全的个数: "<<size2_s<<endl;
+    cout<<"安全的个数: "<<size2_s * 3<<endl;
     cout<<endl;
     cout<<"plat"<<endl;
     cout<<"所有满足条件的个数: "<<size3 * 3<<endl;
     cout<<"可替换的个数: "<<l_a_t_s.size()<<endl;
-    cout<<"安全的个数: "<<size3_s<<endl;
+    cout<<"安全的个数: "<<size3_s * 3<<endl;
     cout<<endl;
     cout<<"pll"<<endl;
     cout<<"所有满足条件的个数: "<<size4 * 3<<endl;
     cout<<"可替换的个数: "<<l_a_l.size()<<endl;
-    cout<<"安全的个数: "<<size4_s<<endl;
+    cout<<"安全的个数: "<<size4_s * 3<<endl;
 
     ofs.open("res.txt", std::ios::out);
     ofs<<"padd1"<<" "<< l_a_s1.size()<<endl;
