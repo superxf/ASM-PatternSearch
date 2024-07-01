@@ -116,7 +116,7 @@ void Pattern_Search::preprocess(){
                 int pos = 0;
                 int pos2 = 0;
                 int len = tmp.size();
-                pos2 = tmp.find("\t", pos);
+                pos2 = tmp.find(" ", pos)== -1? tmp.find("\t", pos) : tmp.find(" ", pos);
                
                 if(pos2 == -1){
                     ins.op = tmp;
